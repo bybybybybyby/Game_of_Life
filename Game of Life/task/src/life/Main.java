@@ -1,28 +1,51 @@
 package life;
+
+import java.io.IOException;
 import java.util.Scanner;
+import java.lang.Thread;
 
 public class Main {
     public static void main(String[] args) {
 
-//        String TEST = "8 1 10";
-//        Scanner sc = new Scanner(TEST);
-
         Scanner sc = new Scanner(System.in);
 
-        String[] input = sc.nextLine().split("\\s+");
-        int n = Integer.parseInt(input[0]);    // Size of Universe
-        long s = Long.parseLong(input[1]);    // Seed for Random
-        int m = Integer.parseInt(input[2]);    // Number of generations
+        int n = Integer.parseInt(sc.nextLine());
 
         Universe universe = new Universe();
-        Generation generation = new Generation(universe, n, s, m);
+        Generation generation = new Generation(universe, n);
         universe.setCurrentGen(generation.generateUniverse());
 
-        for (int i = 0; i < m; i++) {
+        int g = 1;
+        int evolutions = 10;
+
+        while (evolutions > 0) {
+
+            System.out.println("Generation #" + g++);
+            System.out.println("Alive: " + generation.alive(universe.getCurrentGen()));
+
+            universe.printUniverse();
             generation.evolve();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                System.out.println(e);
+            }
+            clearScreen();
+            evolutions--;
         }
 
-        universe.printUniverse();
+    }
+
+    public static void clearScreen() {
+        //Clears Screen in java
+        try {
+            if (System.getProperty("os.name").contains("Windows"))
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            else
+                Runtime.getRuntime().exec("clear");
+        } catch (IOException | InterruptedException e) {
+            System.out.println(e);
+        }
 
     }
 }

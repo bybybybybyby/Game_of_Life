@@ -6,24 +6,23 @@ public class Generation {
 
     private Universe universe;
     private int n;  // Size of Universe
-    private int m;  // Number of generations to create
+//    private int m;  // Number of generations to create
     private Random random;
 
-    public Generation(Universe universe, int n, long s, int m) {
+    public Generation(Universe universe, int n) {
         this.universe = universe;
         this.n = n;
-        this.m = m;
-        this.random = new Random(s);
+        this.random = new Random();
     }
 
     public String[][] generateUniverse() {
-        String[][] universe = new String[this.n][this.n];
+        String[][] generated = new String[this.n][this.n];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                universe[i][j] = random.nextBoolean() ? "O" : " ";
+                generated[i][j] = random.nextBoolean() ? "O" : " ";
             }
         }
-        return universe;
+        return generated;
     }
 
     /*
@@ -31,7 +30,6 @@ public class Generation {
     An alive cell survives if has two or three alive neighbors; otherwise, it dies of boredom (<2) or overpopulation (>3)
     A dead cell is reborn if it has exactly three alive neighbors
      */
-//    public String[][] evolve(String[][] currentGen) {
     public void evolve() {
         String[][] currentGen = universe.getCurrentGen();
         int len = currentGen.length;
@@ -63,6 +61,18 @@ public class Generation {
                 }
             }
          universe.setCurrentGen(nextGen);
+    }
+
+    public int alive(String[][] matrix) {
+        int count = 0;
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix.length; j++) {
+                if (matrix[i][j].equals("O")) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     public static int neighbors(String[][] uni, int r, int c) {
