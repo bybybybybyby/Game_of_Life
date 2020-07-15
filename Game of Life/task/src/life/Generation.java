@@ -9,6 +9,10 @@ public class Generation {
 //    private int m;  // Number of generations to create
     private Random random;
 
+    public Generation(Universe universe) {
+        this(universe, 20);
+    }
+
     public Generation(Universe universe, int n) {
         this.universe = universe;
         this.n = n;
