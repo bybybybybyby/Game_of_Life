@@ -1,10 +1,9 @@
 package life;
 
-import java.io.IOException;
-import java.util.Scanner;
 import java.lang.Thread;
 
 public class Main {
+
     public static void main(String[] args) {
 
         Universe universe = new Universe();
@@ -13,6 +12,26 @@ public class Main {
         GameOfLife gol = new GameOfLife();
 
         while (true) {
+            // Reset button pressed
+            if (gol.isReset()) {
+                universe = new Universe();
+                generation = new Generation(universe);
+                universe.setCurrentGen(generation.generateUniverse());
+                gol.setGen(0);
+                gol.resetToFalse();
+            }
+
+            // Play/Pause button pressed
+            if (gol.isPaused()) {
+//                // Only can get it to unpause with more code than 'continue'
+                try {
+                    Thread.sleep(1);
+                    continue;
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+
             generation.evolve();
 
             String [][] currentGen = universe.getCurrentGen();
@@ -30,7 +49,7 @@ public class Main {
 
             // wait between evolutions
             try {
-                Thread.sleep(200);
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -38,10 +57,12 @@ public class Main {
             String gen = "Generation #" + gol.getGen();
             String alive = "Alive: " + generation.alive(currentGen);
 
-            gol.GenerationLabel.setText(gen);
-            gol.AliveLabel.setText(alive);
+            gol.generationLabel.setText(gen);
+            gol.aliveLabel.setText(alive);
 
             gol.setGen(gol.getGen() + 1);
         }
     }
+
+
 }
